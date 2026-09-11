@@ -1,0 +1,1715 @@
+/* ==================== PROFESSIONAL ENTERPRISE GIS THEME ==================== */
+.mapWrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #f8fafc;
+  font-family: var(--font-sans);
+  color: #0f172a;
+}
+
+.mapContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #eef2f6;
+}
+
+/* ==================== UNIFIED COMMAND BAR ==================== */
+.commandHeader {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04);
+  pointer-events: auto;
+}
+
+/* Brand Section */
+.brandBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.brandIconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #0f766e;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(15, 118, 110, 0.25);
+}
+
+.brandInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandName {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0f172a;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.brandDept {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.telemetryBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #15803d;
+  letter-spacing: 0.04em;
+}
+
+.pulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 6px #16a34a;
+  animation: pulseDotAnim 2s infinite;
+}
+
+@keyframes pulseDotAnim {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.3); }
+}
+
+/* Search & Filters */
+.filterControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 520px;
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #0f172a;
+  flex: 1;
+  transition: all 0.15s ease;
+}
+
+.searchField:focus-within {
+  border-color: #0f766e;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.15);
+}
+
+.searchField input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.searchField input::placeholder {
+  color: #94a3b8;
+}
+
+.filterSelect {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: all 0.15s ease;
+}
+
+.filterSelect:focus-within {
+  border-color: #0f766e;
+  background: #ffffff;
+}
+
+.filterSelect select {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #0f172a;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.filterSelect select option {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+/* Base Map Switcher Segmented Control */
+.baseMapGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.segmentedControl {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmentBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #64748b;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.segmentBtn:hover {
+  color: #0f172a;
+}
+
+.segmentBtnActive {
+  background: #0f766e !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.3);
+}
+
+.iconSquareBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.iconSquareBtn:hover {
+  background: #ffffff;
+  border-color: #0f766e;
+  color: #0f766e;
+}
+
+/* ==================== SUB-TOOLBAR (DATA LAYERS) ==================== */
+.layerToolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  pointer-events: auto;
+}
+
+.chipBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05);
+}
+
+.chipBtn:hover {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+.chipBtnActive {
+  background: #f0fdf4 !important;
+  color: #166534 !important;
+  border-color: #86efac !important;
+  box-shadow: 0 0 10px rgba(22, 163, 74, 0.15);
+}
+
+.chipBtnRadarActive {
+  background: #eff6ff !important;
+  color: #1e40af !important;
+  border-color: #93c5fd !important;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+}
+
+.radarControlBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10.5px;
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.radarLiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2563eb;
+  animation: radarBlink 1.5s infinite;
+}
+
+@keyframes radarBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.4); }
+}
+
+.opacityControl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  color: #64748b;
+}
+
+.opacityControl input[type="range"] {
+  width: 60px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+/* ==================== BOTTOM STATUS & INTEL LEGEND ==================== */
+.intelLegend {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+  font-size: 11px;
+  pointer-events: auto;
+}
+
+.legendHeading {
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.legendTag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #334155;
+  font-weight: 600;
+  font-size: 10.5px;
+}
+
+.colorSwatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.lineSwatch {
+  width: 14px;
+  height: 3.5px;
+  border-radius: 2px;
+}
+
+.intelFooter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9.5px;
+  color: #059669;
+  font-weight: 700;
+  padding-top: 4px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* ==================== FLOATING MAP ZOOM CONTROLS ==================== */
+.zoomControls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  border-radius: 8px;
+  padding: 2px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+  pointer-events: auto;
+}
+
+.zoomBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoomBtn:hover {
+  background: #f1f5f9;
+  color: #0f766e;
+}
+
+.zoomBtn:active {
+  background: #e2e8f0;
+}
+
+.zoomDivider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 1px 4px;
+}
+
+/* ==================== RADAR & THREAT PULSE ANIMATIONS ==================== */
+@keyframes threatPulseAnim {
+  0% {
+    stroke-opacity: 0.9;
+    stroke-width: 1.5px;
+    fill-opacity: 0.18;
+  }
+  50% {
+    stroke-opacity: 0.25;
+    stroke-width: 3px;
+    fill-opacity: 0.05;
+  }
+  100% {
+    stroke-opacity: 0.9;
+    stroke-width: 1.5px;
+    fill-opacity: 0.18;
+  }
+}
+
+:global(.threat-pulse-ring) {
+  animation: threatPulseAnim 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+  pointer-events: none !important;
+}
+
+/* ==================== RAINFALL AWS STATION BADGES ==================== */
+:global(.rainfall-aws-pin) {
+  background: transparent !important;
+  border: none !important;
+}
+
+:global(.rainfall-aws-badge) {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid #0284c7;
+  border-radius: 20px;
+  padding: 2px 7px;
+  box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25), 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #0369a1;
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: transform 0.15s ease;
+}
+
+:global(.rainfall-aws-badge:hover) {
+  transform: scale(1.08);
+}
+
+/* ==================== MAP POPUPS: HISTORICAL HOTSPOT & HIGHWAYS ==================== */
+.hotspotCard {
+  padding: 16px 18px;
+  min-width: 300px;
+  max-width: 350px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.hotspotHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.hotspotArchiveTag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.hotspotArchiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dc2626;
+  box-shadow: 0 0 6px rgba(220, 38, 38, 0.6);
+}
+
+.hotspotSeverityBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.12);
+}
+
+.hotspotTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.hotspotMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.hotspotDateBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.hotspotTypePill {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.hotspotDesc {
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  background: #f8fafc;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.hotspotImpactBox {
+  background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hotspotImpactText {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #991b1b;
+  letter-spacing: 0.01em;
+}
+
+.hotspotCoords {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 10px;
+  font-family: monospace;
+  color: #94a3b8;
+  margin-top: 8px;
+}
+
+/* Highway Popup Card */
+.highwayCard {
+  padding: 14px 16px;
+  min-width: 280px;
+  max-width: 320px;
+  background: #ffffff;
+}
+
+.highwayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.highwayTitle {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.highwayMeta {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.highwayDesc {
+  font-size: 11.5px;
+  color: #334155;
+  line-height: 1.45;
+  margin: 6px 0 10px 0;
+}
+
+.highwayPasses {
+  font-size: 10.5px;
+  color: #475569;
+  background: #f8fafc;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+/* ==================== RIGHT TELEMETRY DOSSIER DRAWER ==================== */
+.telemetryDrawer {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  bottom: 14px;
+  width: 390px;
+  z-index: 1001;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(203, 213, 225, 0.95);
+  border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.16), 0 2px 6px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideInDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInDrawer {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.drawerHeader {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: #f8fafc;
+}
+
+.drawerTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.drawerTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.districtTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.stateTag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  background: #e2e8f0;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.riskLevelBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.districtSub {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drawerCloseBtn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  color: #64748b;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.drawerCloseBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: scale(1.05);
+}
+
+.drawerBody {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ==================== HERO SUSCEPTIBILITY GAUGE CARD ==================== */
+.heroGaugeCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.gaugeCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.gaugeCardHeadLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0f172a;
+}
+
+.gaugeCardHeadRight {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 600;
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.gaugeHeroRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gaugeSvgWrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gaugeSvg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.gaugeCenterText {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.gaugePercent {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.gaugePercentSub {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+}
+
+.gaugeInfoCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.threatTierTitle {
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.threatEnsembleText {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.threatConfidenceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #059669;
+  background: #ecfdf5;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid #a7f3d0;
+  margin-top: 4px;
+  width: fit-content;
+}
+
+/* ==================== SHAP FACTOR ATTRIBUTION BARS ==================== */
+.shapSection {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.shapTitle {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shapBarsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shapBarItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shapBarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+}
+
+.shapBarLabel {
+  font-weight: 600;
+  color: #475569;
+}
+
+.shapBarValue {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.shapTrack {
+  width: 100%;
+  height: 5px;
+  background: #f1f5f9;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.shapFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+/* ==================== METEOROLOGICAL TELEMETRY CARD ==================== */
+.weatherCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.weatherPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.tempReadout {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.tempVal {
+  font-size: 28px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.tempDeg {
+  font-size: 15px;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.conditionLabel {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #0284c7;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.metricGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.metricCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.metricIconWrap {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cellVal {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.cellLbl {
+  color: #64748b;
+  font-size: 9.5px;
+  font-weight: 600;
+}
+
+/* ==================== SOIL MOISTURE CARD ==================== */
+.soilCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.soilProgress {
+  width: 100%;
+  height: 7px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.soilProgressBar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.soilFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+/* ==================== ACTION DIRECTIVE BOX ==================== */
+.directiveCard {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.directiveHead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #991b1b;
+}
+
+.directiveAlert {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #7f1d1d;
+  font-weight: 500;
+}
+
+/* ==================== HIGH-TECH SIMULATION SCENARIO BUTTON ==================== */
+.scenarioBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #0f766e;
+  border: 1px solid #0d5c56;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.25);
+}
+
+.scenarioBtn:hover {
+  background: #0d5c56;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.35);
+}
+
+.scenarioBtnActive {
+  background: #dc2626 !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 0 16px rgba(220, 38, 38, 0.35) !important;
+  animation: pulseBtn 2s infinite;
+}
+
+@keyframes pulseBtn {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.terrainNote {
+  font-size: 11px;
+  color: #475569;
+  line-height: 1.45;
+  background: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(15, 118, 110, 0.2);
+  border-top-color: #0f766e;
+  border-radius: 50%;
+  animation: spinAnim 0.8s linear infinite;
+}
+
+@keyframes spinAnim {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== VULNERABLE VILLAGE & SETTLEMENT PINS & CARDS ==================== */
+:global(.village-pin-icon) {
+  background: transparent !important;
+  border: none !important;
+}
+
+:global(.village-marker-badge) {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18), 0 1px 3px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: transform 0.15s ease;
+}
+
+:global(.village-marker-badge:hover) {
+  transform: scale(1.1);
+}
+
+.villageCard {
+  padding: 16px 18px;
+  min-width: 300px;
+  max-width: 350px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.villageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.villageTag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.villageSeverityPill {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.villageTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.villageMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.villageStatsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+
+.villageStatItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.villageStatVal {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.villageStatLbl {
+  font-size: 9px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.villageThreatBox {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.villageThreatHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+  color: #c2410c;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.villageThreatText {
+  font-size: 11.5px;
+  color: #7c2d12;
+  line-height: 1.4;
+}
+
+.villageEvacBox {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.villageEvacHead {
+  font-size: 10px;
+  font-weight: 800;
+  color: #047857;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.villageEvacRoute {
+  font-size: 11px;
+  color: #065f46;
+  line-height: 1.35;
+}
+
+/* ==================== CRITICAL INFRASTRUCTURE PINS & CARDS ==================== */
+:global(.infra-pin-icon) {
+  background: transparent !important;
+  border: none !important;
+}
+
+:global(.infra-marker-badge) {
+  background: #ffffff;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: transform 0.15s ease;
+}
+
+:global(.infra-marker-badge:hover) {
+  transform: scale(1.1);
+}
+
+.infraCard {
+  padding: 16px 18px;
+  min-width: 300px;
+  max-width: 350px;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.infraHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.infraCategoryTag {
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0f766e;
+  background: #f0fdf4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #bbf7d0;
+}
+
+.infraStatusBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.infraTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.infraMeta {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.infraProximityBox {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.infraProximityHead {
+  font-size: 10px;
+  font-weight: 800;
+  color: #b91c1c;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.infraProximityText {
+  font-size: 11.5px;
+  color: #7f1d1d;
+  line-height: 1.35;
+}
+
+.infraAgencyBox {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #334155;
+}
+
+/* ==================== RIGHT TELEMETRY DRAWER: LOCAL ASSETS ROLLUP ==================== */
+.localAssetsSection {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.localAssetsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+
+.localAssetsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.assetMiniCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.assetMiniCard:hover {
+  background: #ffffff;
+  border-color: #0f766e;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.12);
+}
+
+.assetMiniHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.assetMiniTitle {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.assetMiniBadge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.assetMiniSub {
+  font-size: 10.5px;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+/* ==================== ACTIVE ROUTE HUD BANNER & ACTION BUTTONS ==================== */
+.routeActionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 8px;
+}
+
+.routeActionBtn:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(22, 163, 74, 0.15);
+}
+
+.routeActionBtnEvac {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 8px 12px;
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 8px;
+}
+
+.routeActionBtnEvac:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(2, 132, 199, 0.15);
+}
+
+.routeHudBanner {
+  position: absolute;
+  top: 76px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.16);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  animation: hudSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90vw;
+}
+
+@keyframes hudSlideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.routeHudLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.routeHudBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  width: fit-content;
+}
+
+.routeHudTitle {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.routeHudStats {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  padding: 0 14px;
+}
+
+.routeStatItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.routeStatVal {
+  font-size: 14px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.routeStatLbl {
+  font-size: 9.5px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.routeHudActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.routeHudFlyBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.routeHudFlyBtn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.routeHudClearBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.routeHudClearBtn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+

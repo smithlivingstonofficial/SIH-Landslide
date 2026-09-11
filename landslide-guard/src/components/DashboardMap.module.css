@@ -1,0 +1,136 @@
+/* ==================== MAP POPUP STYLES ==================== */
+.popup {
+  font-family: 'Inter', -apple-system, sans-serif;
+  min-width: 260px;
+}
+
+.popupHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.popupTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.popupState {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 2px 0 0;
+}
+
+.popupBadge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.popupStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.popupStat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.popupLabel {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.popupValue {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+.popupFactors {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.factorRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.factorName {
+  font-size: 11px;
+  color: #94a3b8;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.factorBar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.factorFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.factorVal {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  width: 32px;
+  text-align: right;
+}
+
+.popupDesc {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ==================== STATE LABELS ==================== */
+.stateLabel {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.stateLabel span {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
