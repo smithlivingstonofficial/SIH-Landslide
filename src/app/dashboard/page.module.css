@@ -1,25 +1,36 @@
 /* ==================== DASHBOARD PAGE ==================== */
 .page {
+  padding: 24px 32px 64px 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100%;
 }
 
 .pageHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
 .pageTitle {
   font-size: 24px;
   font-weight: 800;
-  margin-bottom: 4px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .pageDesc {
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
 }
 
 /* ==================== KPI GRID ==================== */
@@ -29,191 +40,243 @@
   gap: 16px;
 }
 
-/* ==================== MAIN GRID ==================== */
-.mainGrid {
+.kpiCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.kpiIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpiVal {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.kpiLabel {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ==================== CHARTS ROW ==================== */
+.chartsRow {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* ==================== MAP SECTION ==================== */
-.mapSection {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+@media (max-width: 1050px) {
+  .chartsRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chartCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
   padding: 20px;
   display: flex;
   flex-direction: column;
 }
 
-.sectionHeader {
+.chartHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
 }
 
-.sectionHeader h2 {
-  font-size: 16px;
+.chartTitle {
+  font-size: 15px;
   font-weight: 700;
+  color: #0f172a;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.mapToggles {
-  display: flex;
-  gap: 4px;
-  background: var(--bg-surface);
-  padding: 3px;
-  border-radius: var(--radius-md);
+.chartSubtitle {
+  font-size: 11.5px;
+  color: #64748b;
 }
 
-.mapToggle {
-  padding: 5px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  transition: all var(--transition-fast);
-}
-
-.mapToggle:hover {
-  color: var(--text-primary);
-}
-
-.mapToggleActive {
-  background: var(--primary-glow);
-  color: var(--primary-light);
-}
-
-.mapContainer {
-  flex: 1;
-  min-height: 450px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.mapLoading {
-  height: 450px;
+/* ==================== SHAP EXPLAINABILITY SECTION ==================== */
+.shapSection {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-.mapLoadingSpinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--primary-light);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.mapLegend {
-  display: flex;
   gap: 16px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
 }
 
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.legendDot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* ==================== ALERTS SECTION ==================== */
-.alertsSection {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  max-height: 600px;
-}
-
-.viewAll {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: var(--primary-light);
-  font-weight: 500;
-}
-
-.alertsList {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.alertCard {
-  padding: 14px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-  cursor: pointer;
-}
-
-.alertCard:hover {
-  border-color: var(--border-light);
-  background: var(--bg-elevated);
-}
-
-.alertTop {
+.shapHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 12px;
 }
 
-.alertTime {
-  font-size: 11px;
-  color: var(--text-muted);
+.shapDistrictSelect {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
 }
 
-.alertDistrict {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 4px;
+.shapGrid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
 }
 
-.alertMessage {
-  font-size: 12px;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 1200px) {
-  .mainGrid {
+@media (max-width: 900px) {
+  .shapGrid {
     grid-template-columns: 1fr;
   }
+}
 
+.shapSummaryCard {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scoreGauge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gaugeVal {
+  font-size: 32px;
+  font-weight: 900;
+  color: #dc2626;
+}
+
+.gaugeLabel {
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.shapBarsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.shapBarItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shapBarLabelRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #334155;
+}
+
+.shapBarTrack {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.shapBarFill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+/* ==================== DISTRICTS WATCHLIST TABLE ==================== */
+.tableCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 14px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.table th {
+  padding: 10px 14px;
+  color: #475569;
+  font-weight: 700;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.table tr:hover td {
+  background: #f8fafc;
+}
+
+.badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+@media (max-width: 1200px) {
   .kpiGrid {
     grid-template-columns: repeat(2, 1fr);
   }

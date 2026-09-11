@@ -4,46 +4,46 @@
   /* Brand Colors */
   --primary: #0f766e;
   --primary-light: #14b8a6;
-  --primary-dark: #0d5c56;
-  --primary-glow: rgba(20, 184, 166, 0.15);
+  --primary-dark: #115e59;
+  --primary-glow: rgba(15, 118, 110, 0.12);
 
   /* Risk Colors */
-  --risk-very-high: #ef4444;
-  --risk-high: #f97316;
-  --risk-medium: #f59e0b;
-  --risk-low: #84cc16;
-  --risk-very-low: #22c55e;
+  --risk-very-high: #dc2626;
+  --risk-high: #ea580c;
+  --risk-medium: #d97706;
+  --risk-low: #16a34a;
+  --risk-very-low: #059669;
 
-  /* Neutral Palette */
-  --bg-primary: #0a0f1a;
-  --bg-secondary: #111827;
-  --bg-card: #1a2332;
-  --bg-card-hover: #1e293b;
-  --bg-surface: #0f172a;
-  --bg-elevated: #1e2a3a;
+  /* Neutral Palette - Clean Crisp Light Theme */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f8fafc;
 
-  --border: #1e3a4a;
-  --border-light: #2d4a5a;
-  --border-glow: rgba(20, 184, 166, 0.3);
+  --border: #e2e8f0;
+  --border-light: #cbd5e1;
+  --border-glow: rgba(15, 118, 110, 0.2);
 
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
   --text-muted: #64748b;
-  --text-accent: #14b8a6;
+  --text-accent: #0f766e;
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
-  --gradient-dark: linear-gradient(180deg, #0a0f1a 0%, #111827 100%);
-  --gradient-card: linear-gradient(135deg, #1a2332 0%, #0f172a 100%);
-  --gradient-hero: linear-gradient(135deg, rgba(15, 118, 110, 0.2) 0%, rgba(20, 184, 166, 0.05) 100%);
-  --gradient-risk-high: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(249, 115, 22, 0.1) 100%);
+  --gradient-dark: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(15, 118, 110, 0.08) 0%, rgba(20, 184, 166, 0.03) 100%);
+  --gradient-risk-high: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(249, 115, 22, 0.05) 100%);
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(20, 184, 166, 0.15);
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 16px rgba(15, 118, 110, 0.15);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04);
 
   /* Spacing */
   --radius-sm: 6px;

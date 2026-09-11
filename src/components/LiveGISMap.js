@@ -1432,6 +1432,27 @@ export default function LiveGISMap({ initialDistrictId = null }) {
                 <div className={styles.directiveAlert}>
                   {computedDynamicRisk?.actionAdvice}
                 </div>
+                <a
+                  href="/alerts"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "6px",
+                    background: "linear-gradient(135deg, #dc2626 0%, #ef4444 100%)",
+                    color: "#ffffff",
+                    padding: "7px 12px",
+                    borderRadius: "6px",
+                    fontSize: "11.5px",
+                    fontWeight: 700,
+                    textDecoration: "none",
+                    marginTop: "10px",
+                    boxShadow: "0 2px 8px rgba(239, 68, 68, 0.35)",
+                  }}
+                >
+                  <Radio size={13} />
+                  <span>Dispatch Supabase Alert ({selectedDistrict.district})</span>
+                </a>
               </div>
 
               {/* Simulation Scenario Trigger */}

@@ -14,6 +14,8 @@ export const metadata = {
   keywords: "landslide, early warning, AI, NER, North East India, disaster management, GIS",
 };
 
+import GlobalNavbar from "@/components/GlobalNavbar";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
@@ -25,7 +27,31 @@ export default function RootLayout({ children }) {
           crossOrigin=""
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+            width: "100vw",
+            overflow: "hidden",
+            background: "var(--bg-primary)",
+          }}
+        >
+          <GlobalNavbar />
+          <div
+            style={{
+              flex: 1,
+              minHeight: 0,
+              overflowY: "auto",
+              overflowX: "hidden",
+              position: "relative",
+            }}
+          >
+            {children}
+          </div>
+        </div>
+      </body>
     </html>
   );
 }
