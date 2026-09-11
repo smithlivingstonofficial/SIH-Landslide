@@ -28,15 +28,14 @@ The North Eastern Region (NER) of India is characterized by fragile Himalayan ge
 SIH-Landslide/
 ├── README.md
 ├── .gitignore
-└── landslide-guard/           # Next.js 16 (React 19) Early Warning Application
-    ├── src/
-    │   ├── app/               # App Router pages (GIS Map, Dashboard, Alerts)
-    │   ├── components/        # Leaflet GIS Map, Command Toolbar, Telemetry Panels
-    │   ├── data/              # 128 NER Districts, High-Risk Villages, Highways, Landslide Atlas
-    │   └── services/          # Open-Meteo Weather API, OSRM Mountain Routing Engine
-    ├── public/                # Static assets & icons
-    ├── package.json
-    └── next.config.mjs
+├── package.json
+├── next.config.mjs
+├── public/                # Static assets & icons
+└── src/
+    ├── app/               # App Router pages (GIS Map, Dashboard, Alerts)
+    ├── components/        # Leaflet GIS Map, Command Toolbar, Telemetry Panels
+    ├── data/              # 128 NER Districts, High-Risk Villages, Highways, Landslide Atlas
+    └── services/          # Open-Meteo Weather API, OSRM Mountain Routing Engine
 ```
 
 ---
@@ -49,8 +48,12 @@ SIH-Landslide/
 
 ### 2. Installation
 ```bash
-cd landslide-guard
 npm install
+```
+
+### 3. Run Development Server
+```bash
+npm run dev
 ```
 
 ### 3. Run Development Server
