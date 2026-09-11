@@ -2,6 +2,7 @@
 -- 🏔️ LandslideGuard AI — Supabase PostgreSQL + PostGIS Production Schema
 -- Department: MDoNER | Category: Disaster Management Early Warning System
 -- Covers all 8 North Eastern States: AR, AS, MN, ML, MZ, NL, SK, TR
+-- Idempotent script: Safe to run multiple times without duplicate errors
 -- ==============================================================================
 
 -- Enable required PostgreSQL extensions
@@ -106,24 +107,45 @@ CREATE TABLE IF NOT EXISTS public.emergency_prioritization (
 );
 
 -- ------------------------------------------------------------------------------
--- 5. ROW LEVEL SECURITY (RLS) POLICIES
+-- 5. ROW LEVEL SECURITY (RLS) POLICIES (Idempotent: Drops first if existing)
 -- ------------------------------------------------------------------------------
 ALTER TABLE public.alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.field_reports ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.emergency_prioritization ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to active alerts, reports, prioritization
+-- 5.1 Alerts Policies
+DROP POLICY IF EXISTS "Public Read Alerts" ON public.alerts;
+DROP POLICY IF EXISTS "Public Insert Alerts" ON public.alerts;
+DROP POLICY IF EXISTS "Public Update Alerts" ON public.alerts;
+DROP POLICY IF EXISTS "Public Delete Alerts" ON public.alerts;
+
 CREATE POLICY "Public Read Alerts" ON public.alerts FOR SELECT USING (true);
 CREATE POLICY "Public Insert Alerts" ON public.alerts FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public Update Alerts" ON public.alerts FOR UPDATE USING (true);
+CREATE POLICY "Public Delete Alerts" ON public.alerts FOR DELETE USING (true);
+
+-- 5.2 Field Reports Policies
+DROP POLICY IF EXISTS "Public Read Reports" ON public.field_reports;
+DROP POLICY IF EXISTS "Public Insert Reports" ON public.field_reports;
+DROP POLICY IF EXISTS "Public Update Reports" ON public.field_reports;
+DROP POLICY IF EXISTS "Public Delete Reports" ON public.field_reports;
 
 CREATE POLICY "Public Read Reports" ON public.field_reports FOR SELECT USING (true);
 CREATE POLICY "Public Insert Reports" ON public.field_reports FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public Update Reports" ON public.field_reports FOR UPDATE USING (true);
+CREATE POLICY "Public Delete Reports" ON public.field_reports FOR DELETE USING (true);
+
+-- 5.3 Subscribers Policies
+DROP POLICY IF EXISTS "Public Read Subscribers" ON public.subscribers;
+DROP POLICY IF EXISTS "Public Insert Subscribers" ON public.subscribers;
 
 CREATE POLICY "Public Read Subscribers" ON public.subscribers FOR SELECT USING (true);
 CREATE POLICY "Public Insert Subscribers" ON public.subscribers FOR INSERT WITH CHECK (true);
+
+-- 5.4 Emergency Prioritization Policies
+DROP POLICY IF EXISTS "Public Read Emergency Triage" ON public.emergency_prioritization;
+DROP POLICY IF EXISTS "Public Upsert Emergency Triage" ON public.emergency_prioritization;
 
 CREATE POLICY "Public Read Emergency Triage" ON public.emergency_prioritization FOR SELECT USING (true);
 CREATE POLICY "Public Upsert Emergency Triage" ON public.emergency_prioritization FOR ALL USING (true);
@@ -131,14 +153,23 @@ CREATE POLICY "Public Upsert Emergency Triage" ON public.emergency_prioritizatio
 -- ------------------------------------------------------------------------------
 -- 6. REALTIME REPLICATION ENABLEMENT
 -- ------------------------------------------------------------------------------
--- Enable Supabase Realtime publication on alerts and field_reports
-BEGIN;
-  DROP PUBLICATION IF EXISTS supabase_realtime;
-  CREATE PUBLICATION supabase_realtime FOR TABLE public.alerts, public.field_reports;
-COMMIT;
+DO $$
+BEGIN
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.alerts;
+  EXCEPTION WHEN duplicate_object THEN
+    NULL;
+  END;
+
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.field_reports;
+  EXCEPTION WHEN duplicate_object THEN
+    NULL;
+  END;
+END $$;
 
 -- ------------------------------------------------------------------------------
--- 7. SEED DATA: Pre-populate Realistic Active Alerts & Reports
+-- 7. SEED DATA: Pre-populate Realistic Active Disaster Alerts (Idempotent)
 -- ------------------------------------------------------------------------------
 INSERT INTO public.alerts (
     id, district_id, district_name, state, state_code, severity, hazard_type,
@@ -199,31 +230,5 @@ INSERT INTO public.alerts (
     }'::jsonb,
     'ACTIVE',
     NOW() - INTERVAL '3 hours'
-);
-
--- Seed Field Reports
-INSERT INTO public.field_reports (
-    id, reporter_name, reporter_role, phone_number, location_name, district_id, state,
-    latitude, longitude, hazard_type, severity_observed, photo_urls, description,
-    ai_classification, status, created_at
-) VALUES
-(
-    'd4e5f6a7-b8c9-0d1e-2f3a-4b5c6d7e8f9a',
-    'Tenzing Lepcha', 'FIELD_OFFICER', '+919876543210', 'Dikchu-Mangan Road, Km 14',
-    'SK-001', 'Sikkim', 27.4200, 88.5150, 'TENSION_CRACK', 'CRITICAL',
-    ARRAY['https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop'],
-    'Ground tension crack propagating longitudinally across road surface. Width approximately 18cm and expanding rapidly under heavy rainfall.',
-    '{"detected_label": "Tension Crack in Slope", "confidence": 0.94, "risk_score": 0.88}'::jsonb,
-    'VERIFIED',
-    NOW() - INTERVAL '40 minutes'
-),
-(
-    'e5f6a7b8-c9d0-1e2f-3a4b-5c6d7e8f9a0b',
-    'Rajib Gogoi', 'BRO_ENGINEER', '+919435012345', 'NH27 Mahur Pass, Dima Hasao',
-    'AS-005', 'Assam', 25.1750, 93.1150, 'BLOCKED_ROAD', 'HIGH',
-    ARRAY['https://images.unsplash.com/photo-1584467735815-f778f274e296?w=800&auto=format&fit=crop'],
-    'Massive mud and boulder accumulation blocking both lanes. Excavator mobilized; single lane clearance estimated in 2 hours.',
-    '{"detected_label": "Highway Blockage / Rockfall", "confidence": 0.96, "risk_score": 0.82}'::jsonb,
-    'DISPATCHED',
-    NOW() - INTERVAL '2 hours'
-);
+)
+ON CONFLICT (id) DO NOTHING;

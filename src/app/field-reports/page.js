@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Camera,
   MapPin,
@@ -7,11 +7,11 @@ import {
   Cpu,
   Wifi,
   WifiOff,
-  RefreshCw,
   CheckCircle2,
-  Clock,
   AlertOctagon,
-  Eye,
+  Image as ImageIcon,
+  Trash2,
+  Mountain,
 } from "lucide-react";
 import {
   fetchFieldReports,
@@ -26,7 +26,7 @@ import {
 import { NER_DISTRICTS } from "@/data/nerData";
 import styles from "./fieldReports.module.css";
 
-// Simulated AI Image Analysis Engine
+// Simulated AI Image Analysis Engine (MobileNetV3 Edge Classifier)
 function runAiImageInference(hazardType) {
   switch (hazardType) {
     case "TENSION_CRACK":
@@ -67,11 +67,43 @@ function runAiImageInference(hazardType) {
   }
 }
 
+// Compress image via HTML5 canvas for lightweight Supabase storage & fast network transit
+function compressImage(file, maxWidth = 1000, quality = 0.8) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve({
+          dataUrl: canvas.toDataURL("image/jpeg", quality),
+          sizeKb: Math.round(canvas.toDataURL("image/jpeg", quality).length / 1024),
+        });
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function FieldReportsPage() {
   const [reports, setReports] = useState([]);
   const [pendingOffline, setPendingOffline] = useState([]);
   const [isSimulatedOffline, setIsSimulatedOffline] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Form State
   const [reporterName, setReporterName] = useState("");
@@ -82,27 +114,35 @@ export default function FieldReportsPage() {
   const [hazardType, setHazardType] = useState("TENSION_CRACK");
   const [severityObserved, setSeverityObserved] = useState("HIGH");
   const [description, setDescription] = useState("");
-  const [photoUrl, setPhotoUrl] = useState(
-    "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop"
-  );
   const [coords, setCoords] = useState({ lat: 27.509, lng: 88.532 });
   const [aiAnalysis, setAiAnalysis] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
 
+  // Real Uploaded Photo State (No dummy unsplash photos)
+  const [uploadedImage, setUploadedImage] = useState(null); // { dataUrl, name, sizeKb }
+  const fileInputRef = useRef(null);
+
   // Load Reports & Offline Queue
   useEffect(() => {
-    fetchFieldReports().then(setReports);
-    getPendingOfflineReports().then(setPendingOffline);
+    async function loadData() {
+      setLoading(true);
+      const [fetchedReports, pending] = await Promise.all([
+        fetchFieldReports(),
+        getPendingOfflineReports(),
+      ]);
+      setReports(fetchedReports || []);
+      setPendingOffline(pending || []);
+      setLoading(false);
+    }
+    loadData();
 
-    // Initial AI Inference for default hazard
     setAiAnalysis(runAiImageInference("TENSION_CRACK"));
 
     const unsubscribe = subscribeToFieldReports((newRep) => {
       setReports((prev) => [newRep, ...prev]);
     });
 
-    // Auto-sync when window reconnects
     const handleOnline = async () => {
       setIsSimulatedOffline(false);
       await triggerSync();
@@ -121,6 +161,30 @@ export default function FieldReportsPage() {
     setAiAnalysis(runAiImageInference(val));
   };
 
+  // Handle Real File / Camera Input
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const compressed = await compressImage(file);
+      setUploadedImage({
+        dataUrl: compressed.dataUrl,
+        name: file.name,
+        sizeKb: compressed.sizeKb,
+      });
+    } catch (err) {
+      console.error("Error processing photo:", err);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setUploadedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   // Get GPS Location
   const handleGetLocation = () => {
     if (navigator.geolocation) {
@@ -130,7 +194,9 @@ export default function FieldReportsPage() {
             lat: Number(pos.coords.latitude.toFixed(4)),
             lng: Number(pos.coords.longitude.toFixed(4)),
           });
-          setLocationName(`GPS: ${pos.coords.latitude.toFixed(3)}°N, ${pos.coords.longitude.toFixed(3)}°E`);
+          setLocationName(
+            `GPS: ${pos.coords.latitude.toFixed(3)}°N, ${pos.coords.longitude.toFixed(3)}°E`
+          );
         },
         () => {
           const d = NER_DISTRICTS.find((item) => item.id === selectedDistrictId);
@@ -158,8 +224,10 @@ export default function FieldReportsPage() {
       longitude: coords.lng,
       hazard_type: hazardType,
       severity_observed: severityObserved,
-      photo_urls: [photoUrl],
-      description: description || "Visual observation submitted via LandslideGuard Field Reporting PWA.",
+      photo_urls: uploadedImage?.dataUrl ? [uploadedImage.dataUrl] : [],
+      description:
+        description ||
+        "Visual observation submitted via LandslideGuard Field Reporting PWA.",
       ai_classification: aiAnalysis,
       status: "SUBMITTED",
     };
@@ -174,12 +242,12 @@ export default function FieldReportsPage() {
         text: "Stored in Offline IndexedDB Queue! Will auto-sync when network is restored.",
       });
     } else {
-      // Online mode: submit directly to Supabase
+      // Online mode: submit directly to Supabase DB
       const res = await submitFieldReport(reportPayload);
       if (res.success) {
         setSubmitMessage({
           type: "success",
-          text: "Report successfully pushed to Supabase & dispatched to SDMA!",
+          text: "Report successfully saved to Supabase DB & notified to SDMA!",
         });
         const refreshed = await fetchFieldReports();
         setReports(refreshed);
@@ -188,6 +256,7 @@ export default function FieldReportsPage() {
 
     setIsSubmitting(false);
     setDescription("");
+    handleRemovePhoto();
     setTimeout(() => setSubmitMessage(null), 5000);
   };
 
@@ -208,34 +277,39 @@ export default function FieldReportsPage() {
       <div className={styles.headerRow}>
         <div className={styles.titleArea}>
           <h1>
-            <Camera size={26} color="#2dd4bf" />
+            <Camera size={26} color="#0f766e" />
             <span>Field Reporting & Citizen Hazard Triage</span>
           </h1>
           <p>
             Geo-tagged crowdsourced reporting for cracks, slope deformation, and road blocks
-            • Powered by MobileNetV3 AI & Offline IndexedDB Sync
+            • Connected to Supabase DB & Offline IndexedDB Sync
           </p>
         </div>
 
-        {/* Offline Simulator Switch for Judges */}
+        {/* Offline Simulator Switch */}
         <button
           onClick={() => setIsSimulatedOffline(!isSimulatedOffline)}
           style={{
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            background: isSimulatedOffline ? "#f59e0b" : "rgba(30, 41, 59, 0.8)",
-            color: isSimulatedOffline ? "#0f172a" : "#f1f5f9",
-            border: "1px solid rgba(255, 255, 255, 0.15)",
+            background: isSimulatedOffline ? "#fef3c7" : "#ffffff",
+            color: isSimulatedOffline ? "#b45309" : "#0f172a",
+            border: isSimulatedOffline ? "1px solid #fde68a" : "1px solid #cbd5e1",
             padding: "8px 14px",
             borderRadius: "8px",
             fontSize: "12px",
             fontWeight: 700,
             cursor: "pointer",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
           }}
           title="Simulate losing cellular connectivity in remote Himalayan valleys"
         >
-          {isSimulatedOffline ? <WifiOff size={15} /> : <Wifi size={15} />}
+          {isSimulatedOffline ? (
+            <WifiOff size={15} color="#b45309" />
+          ) : (
+            <Wifi size={15} color="#059669" />
+          )}
           <span>
             {isSimulatedOffline ? "Simulated Mode: OFFLINE" : "Network: ONLINE"}
           </span>
@@ -267,7 +341,7 @@ export default function FieldReportsPage() {
         {/* Left: Reporting Form */}
         <div className={styles.formCard}>
           <div className={styles.cardTitle}>
-            <Upload size={18} color="#2dd4bf" />
+            <Upload size={18} color="#0f766e" />
             <span>Submit Geo-Tagged Hazard Report</span>
           </div>
 
@@ -275,7 +349,7 @@ export default function FieldReportsPage() {
             onSubmit={handleSubmit}
             style={{ display: "flex", flexDirection: "column", gap: "14px" }}
           >
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div className={styles.twoColGrid}>
               <div className={styles.fieldGroup}>
                 <label>Reporter Name</label>
                 <input
@@ -303,7 +377,7 @@ export default function FieldReportsPage() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div className={styles.twoColGrid}>
               <div className={styles.fieldGroup}>
                 <label>Contact Phone</label>
                 <input
@@ -345,9 +419,9 @@ export default function FieldReportsPage() {
                   style={{
                     background: "none",
                     border: "none",
-                    color: "#2dd4bf",
+                    color: "#0f766e",
                     fontSize: "11px",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -366,7 +440,7 @@ export default function FieldReportsPage() {
               />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div className={styles.twoColGrid}>
               <div className={styles.fieldGroup}>
                 <label>Observed Hazard Type</label>
                 <select
@@ -397,24 +471,58 @@ export default function FieldReportsPage() {
               </div>
             </div>
 
-            {/* Photo Attachment & Preset selector */}
+            {/* Real Evidence Photo Upload (Camera / File Picker) */}
             <div className={styles.fieldGroup}>
-              <label>Evidence Photo (Preset or Camera)</label>
-              <select
-                className={styles.select}
-                value={photoUrl}
-                onChange={(e) => setPhotoUrl(e.target.value)}
-              >
-                <option value="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&auto=format&fit=crop">
-                  Sample: Road Tension Fissure (Sikkim)
-                </option>
-                <option value="https://images.unsplash.com/photo-1584467735815-f778f274e296?w=800&auto=format&fit=crop">
-                  Sample: Mud & Boulder Highway Blockage (Dima Hasao)
-                </option>
-                <option value="https://images.unsplash.com/photo-1542224566-6e85f2e6772f?w=800&auto=format&fit=crop">
-                  Sample: Hillside Escarpment Failure (Meghalaya)
-                </option>
-              </select>
+              <label>Evidence Photo (Camera / Device Upload)</label>
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                capture="environment"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+
+              {!uploadedImage ? (
+                <div
+                  className={styles.uploadZone}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <div className={styles.uploadIconWrap}>
+                    <Camera size={20} />
+                  </div>
+                  <div>
+                    <div className={styles.uploadPrompt}>
+                      Click to Take Photo or Browse Device
+                    </div>
+                    <div className={styles.uploadHint}>
+                      Supports JPG, PNG, WEBP • Automatically optimized for low-bandwidth
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className={styles.previewBox}>
+                  <img
+                    src={uploadedImage.dataUrl}
+                    alt="Evidence Preview"
+                    className={styles.previewThumb}
+                  />
+                  <div className={styles.previewMeta}>
+                    <div className={styles.previewName}>{uploadedImage.name}</div>
+                    <div className={styles.previewSize}>
+                      {uploadedImage.sizeKb} KB • Ready for Supabase upload
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    onClick={handleRemovePhoto}
+                  >
+                    <Trash2 size={12} style={{ display: "inline", marginRight: "4px" }} />
+                    Remove
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* AI Real-time Triage Box */}
@@ -428,7 +536,7 @@ export default function FieldReportsPage() {
                   <span>{(aiAnalysis.confidence * 100).toFixed(0)}% Match</span>
                 </div>
                 <div className={styles.aiResult}>{aiAnalysis.detected_label}</div>
-                <div style={{ fontSize: "11px", color: "#cbd5e1" }}>
+                <div style={{ fontSize: "11px", color: "#475569" }}>
                   Triage: {aiAnalysis.advice}
                 </div>
               </div>
@@ -439,7 +547,7 @@ export default function FieldReportsPage() {
               <textarea
                 className={styles.textarea}
                 rows={3}
-                placeholder="Describe crack length, sound of falling stones, water seepage..."
+                placeholder="Describe crack length, sound of falling stones, water seepage, or road condition..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -449,7 +557,7 @@ export default function FieldReportsPage() {
               <Upload size={16} />
               <span>
                 {isSubmitting
-                  ? "Processing Report..."
+                  ? "Pushed to Supabase..."
                   : isSimulatedOffline
                   ? "Save to Offline Queue"
                   : "Submit Hazard Report to Supabase"}
@@ -461,16 +569,14 @@ export default function FieldReportsPage() {
                 style={{
                   padding: "10px",
                   borderRadius: "8px",
-                  fontSize: "12px",
+                  fontSize: "12.5px",
                   fontWeight: 600,
                   textAlign: "center",
                   background:
-                    submitMessage.type === "offline"
-                      ? "rgba(245, 158, 11, 0.15)"
-                      : "rgba(16, 185, 129, 0.15)",
-                  color: submitMessage.type === "offline" ? "#fbbf24" : "#34d399",
+                    submitMessage.type === "offline" ? "#fef3c7" : "#ecfdf5",
+                  color: submitMessage.type === "offline" ? "#b45309" : "#065f46",
                   border: `1px solid ${
-                    submitMessage.type === "offline" ? "#f59e0b" : "#10b981"
+                    submitMessage.type === "offline" ? "#fde68a" : "#a7f3d0"
                   }`,
                 }}
               >
@@ -480,92 +586,125 @@ export default function FieldReportsPage() {
           </form>
         </div>
 
-        {/* Right: Verified Reports Feed */}
+        {/* Right: Live Reports Feed from Supabase DB */}
         <div className={styles.feedSection}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "8px",
-            }}
-          >
-            <div style={{ fontSize: "15px", fontWeight: 700, color: "#ffffff" }}>
+          <div className={styles.feedHeader}>
+            <div className={styles.feedTitle}>
               Live Crowd Hazard Reports ({reports.length})
             </div>
-            <span style={{ fontSize: "11px", color: "#64748b" }}>
-              Real-time feed synced via Supabase
-            </span>
+            <div className={styles.feedSub}>
+              Real-time feed synced via Supabase PostgreSQL
+            </div>
           </div>
 
-          {reports.map((r) => (
-            <div key={r.id} className={styles.reportCard}>
-              <img
-                src={r.photo_urls?.[0] || photoUrl}
-                alt={r.hazard_type}
-                className={styles.photoThumb}
-              />
-
-              <div className={styles.reportDetails}>
-                <div className={styles.reportHead}>
-                  <span
-                    className={styles.hazardTag}
-                    style={{
-                      background:
-                        r.severity_observed === "CRITICAL"
-                          ? "rgba(239, 68, 68, 0.15)"
-                          : "rgba(249, 115, 22, 0.15)",
-                      color:
-                        r.severity_observed === "CRITICAL"
-                          ? "#ef4444"
-                          : "#f97316",
-                      border: `1px solid ${
-                        r.severity_observed === "CRITICAL" ? "#ef4444" : "#f97316"
-                      }`,
-                    }}
-                  >
-                    {r.hazard_type?.replace("_", " ")}
-                  </span>
-
-                  <span className={styles.statusPill}>
-                    {r.status === "VERIFIED" ? "✓ VERIFIED BY SDMA" : r.status}
-                  </span>
-                </div>
-
-                <div className={styles.reportLoc}>
-                  {r.location_name} ({r.state})
-                </div>
-
-                <div className={styles.reportDesc}>{r.description}</div>
-
-                {r.ai_classification?.detected_label && (
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "#818cf8",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <Cpu size={12} />
-                    <span>AI: {r.ai_classification.detected_label} ({(r.ai_classification.confidence * 100).toFixed(0)}%)</span>
-                  </div>
-                )}
-
-                <div className={styles.reportMeta}>
-                  <span>By: {r.reporter_name} ({r.reporter_role})</span>
-                  <span>&bull;</span>
-                  <span>
-                    {new Date(r.created_at).toLocaleTimeString("en-IN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
-              </div>
+          {loading ? (
+            <div style={{ padding: "40px", textAlign: "center", color: "#64748b" }}>
+              Connecting to Supabase field reports...
             </div>
-          ))}
+          ) : reports.length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIconWrap}>
+                <CheckCircle2 size={30} />
+              </div>
+              <div className={styles.emptyTitle}>No Hazard Reports Logged Yet</div>
+              <p className={styles.emptyText}>
+                When citizens or field officials submit geo-tagged observations with photos,
+                they will be stored in Supabase PostgreSQL and appear here live.
+              </p>
+            </div>
+          ) : (
+            reports.map((r) => {
+              const hasPhoto = r.photo_urls && r.photo_urls.length > 0 && r.photo_urls[0];
+
+              return (
+                <div key={r.id} className={styles.reportCard}>
+                  {hasPhoto ? (
+                    <img
+                      src={r.photo_urls[0]}
+                      alt={r.hazard_type}
+                      className={styles.photoThumb}
+                    />
+                  ) : (
+                    <div className={styles.noPhotoBadge}>
+                      <Mountain size={24} color="#0f766e" />
+                      <span>No Photo</span>
+                    </div>
+                  )}
+
+                  <div className={styles.reportDetails}>
+                    <div className={styles.reportHead}>
+                      <span
+                        className={styles.hazardTag}
+                        style={{
+                          background:
+                            r.severity_observed === "CRITICAL"
+                              ? "#fee2e2"
+                              : "#ffedd5",
+                          color:
+                            r.severity_observed === "CRITICAL"
+                              ? "#dc2626"
+                              : "#ea580c",
+                          border: `1px solid ${
+                            r.severity_observed === "CRITICAL"
+                              ? "#fca5a5"
+                              : "#fed7aa"
+                          }`,
+                        }}
+                      >
+                        {r.hazard_type?.replace("_", " ")}
+                      </span>
+
+                      <span className={styles.statusPill}>
+                        {r.status === "VERIFIED"
+                          ? "✓ VERIFIED BY SDMA"
+                          : r.status || "SUBMITTED"}
+                      </span>
+                    </div>
+
+                    <div className={styles.reportLoc}>
+                      {r.location_name} ({r.state})
+                    </div>
+
+                    <div className={styles.reportDesc}>{r.description}</div>
+
+                    {r.ai_classification?.detected_label && (
+                      <div
+                        style={{
+                          fontSize: "11px",
+                          color: "#4f46e5",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        <Cpu size={12} />
+                        <span>
+                          AI: {r.ai_classification.detected_label} (
+                          {(r.ai_classification.confidence * 100).toFixed(0)}%)
+                        </span>
+                      </div>
+                    )}
+
+                    <div className={styles.reportMeta}>
+                      <span>
+                        By: <strong>{r.reporter_name}</strong> ({r.reporter_role})
+                      </span>
+                      <span>&bull;</span>
+                      <span>
+                        {new Date(r.created_at).toLocaleTimeString("en-IN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          day: "numeric",
+                          month: "short",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

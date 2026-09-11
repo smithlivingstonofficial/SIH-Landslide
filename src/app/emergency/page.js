@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Activity,
@@ -13,11 +13,16 @@ import {
   ExternalLink,
   Flame,
 } from "lucide-react";
+import {
+  fetchEmergencyPrioritization,
+  updateEmergencyDeployment,
+} from "@/lib/supabase";
 import styles from "./emergency.module.css";
 
 const INITIAL_TRIAGE = [
   {
     rank: 1,
+    district_id: "SK-001",
     district: "Mangan",
     state: "Sikkim",
     eps: 94.2,
@@ -29,6 +34,7 @@ const INITIAL_TRIAGE = [
   },
   {
     rank: 2,
+    district_id: "AS-005",
     district: "Dima Hasao",
     state: "Assam",
     eps: 88.5,
@@ -40,6 +46,7 @@ const INITIAL_TRIAGE = [
   },
   {
     rank: 3,
+    district_id: "ML-001",
     district: "East Khasi Hills",
     state: "Meghalaya",
     eps: 76.8,
@@ -51,6 +58,7 @@ const INITIAL_TRIAGE = [
   },
   {
     rank: 4,
+    district_id: "NL-001",
     district: "Kohima",
     state: "Nagaland",
     eps: 72.1,
@@ -62,6 +70,7 @@ const INITIAL_TRIAGE = [
   },
   {
     rank: 5,
+    district_id: "MZ-003",
     district: "Champhai",
     state: "Mizoram",
     eps: 68.4,
@@ -73,6 +82,7 @@ const INITIAL_TRIAGE = [
   },
   {
     rank: 6,
+    district_id: "AR-001",
     district: "Papum Pare",
     state: "Arunachal Pradesh",
     eps: 63.9,
@@ -94,12 +104,40 @@ const RELIEF_SHELTERS = [
 export default function EmergencyPage() {
   const [triageList, setTriageList] = useState(INITIAL_TRIAGE);
 
-  const handleDeploy = (rank) => {
+  useEffect(() => {
+    fetchEmergencyPrioritization().then((data) => {
+      if (data && data.length > 0) {
+        setTriageList(
+          data.map((d) => ({
+            rank: d.priority_rank,
+            district_id: d.district_id,
+            district: d.district_name,
+            state: d.state,
+            eps: Number(d.emergency_priority_score),
+            cutoffSeverity: d.cutoff_severity,
+            isolatedVillages: d.isolated_villages_count,
+            vulnerablePop: d.vulnerable_population,
+            assignedTeam: d.ndrf_assigned_team || "Task Force Standby",
+            status: d.relief_shelter_status === "DISPATCHED" ? "DISPATCHED" : "MOBILIZED",
+          }))
+        );
+      }
+    });
+  }, []);
+
+  const handleDeploy = async (rank, districtId) => {
     setTriageList((prev) =>
       prev.map((item) =>
         item.rank === rank ? { ...item, status: "DISPATCHED" } : item
       )
     );
+    if (districtId) {
+      await updateEmergencyDeployment(
+        districtId,
+        "NDRF Heavy Quick Response Team (Dispatched)",
+        "DISPATCHED"
+      );
+    }
   };
 
   return (
@@ -267,7 +305,7 @@ export default function EmergencyPage() {
                     ) : (
                       <button
                         className={styles.deployBtn}
-                        onClick={() => handleDeploy(item.rank)}
+                        onClick={() => handleDeploy(item.rank, item.district_id)}
                       >
                         Deploy Task Force
                       </button>
